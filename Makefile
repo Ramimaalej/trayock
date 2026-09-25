@@ -9,9 +9,9 @@ PIP    := $(BIN)/pip
 help: ## list available targets
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
 
-dev: $(BIN)/inputlock ## create the venv and install inputlock editable
+dev: $(BIN)/trayock ## create the venv and install trayock editable
 
-$(BIN)/inputlock: pyproject.toml
+$(BIN)/trayock: pyproject.toml
 	$(PYTHON) -m venv --system-site-packages $(VENV)
 	$(PIP) install -e .
 	touch $@
@@ -34,23 +34,23 @@ dist: dev ## build sdist + wheel into dist/
 install: dev ## install into the venv for real (non-editable)
 	$(PIP) install .
 
-uninstall: ## remove inputlock from the venv
-	$(PIP) uninstall -y inputlock || true
+uninstall: ## remove trayock from the venv
+	$(PIP) uninstall -y trayock || true
 
 desktop: dev ## install the app launcher into ~/.local/share/applications
-	$(BIN)/inputlock --install-desktop
+	$(BIN)/trayock --install-desktop
 
 desktop-off: dev ## remove the app launcher
-	$(BIN)/inputlock --remove-desktop
+	$(BIN)/trayock --remove-desktop
 
-autostart: dev ## start inputlock automatically at login
-	$(BIN)/inputlock --install-autostart
+autostart: dev ## start trayock automatically at login
+	$(BIN)/trayock --install-autostart
 
-autostart-off: dev ## stop starting inputlock at login
-	$(BIN)/inputlock --remove-autostart
+autostart-off: dev ## stop starting trayock at login
+	$(BIN)/trayock --remove-autostart
 
 udev: ## install the udev rule granting the 'input' group access (needs root)
-	install -m 0644 packaging/99-inputlock.rules /etc/udev/rules.d/99-inputlock.rules
+	install -m 0644 packaging/99-trayock.rules /etc/udev/rules.d/99-trayock.rules
 	udevadm control --reload
 	udevadm trigger
 

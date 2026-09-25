@@ -5,8 +5,8 @@ import io
 import unittest
 from unittest import mock
 
-from inputlock import __version__
-from inputlock.app import build_parser, main
+from trayock import __version__
+from trayock.app import build_parser, main
 
 
 class ParserTests(unittest.TestCase):
@@ -46,15 +46,15 @@ class ParserTests(unittest.TestCase):
 
 class TrayModuleTests(unittest.TestCase):
     def test_icon_assets_exist(self):
-        from inputlock import tray
+        from trayock import tray
 
-        self.assertTrue((tray.ICONS_DIR / "inputlock-locked.svg").is_file())
-        self.assertTrue((tray.ICONS_DIR / "inputlock-unlocked.svg").is_file())
+        self.assertTrue((tray.ICONS_DIR / "trayock-locked.svg").is_file())
+        self.assertTrue((tray.ICONS_DIR / "trayock-unlocked.svg").is_file())
 
     def test_create_tray_reports_missing_backends(self):
         """Without any AppIndicator library this must raise TrayUnavailable,
         not crash with an arbitrary error."""
-        from inputlock import tray
+        from trayock import tray
 
         try:
             tray.AppIndicatorTray(lambda: None, lambda: None)
@@ -71,7 +71,7 @@ class TrayModuleTests(unittest.TestCase):
             from PIL import Image  # noqa: F401
         except ImportError:
             self.skipTest("Pillow not installed")
-        from inputlock.tray import _padlock_image
+        from trayock.tray import _padlock_image
 
         for locked in (True, False):
             image = _padlock_image(locked)
@@ -81,7 +81,7 @@ class TrayModuleTests(unittest.TestCase):
 
 class ListDevicesTests(unittest.TestCase):
     def run_cli(self, rows):
-        from inputlock.blocker import DeviceRow
+        from trayock.blocker import DeviceRow
 
         def fake_scan():
             return [
@@ -90,7 +90,7 @@ class ListDevicesTests(unittest.TestCase):
             ]
 
         stdout = io.StringIO()
-        with mock.patch("inputlock.blocker.scan_devices", side_effect=fake_scan):
+        with mock.patch("trayock.blocker.scan_devices", side_effect=fake_scan):
             with contextlib.redirect_stdout(stdout):
                 status = main(["--list-devices"])
         return status, stdout.getvalue()

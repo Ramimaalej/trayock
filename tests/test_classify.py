@@ -1,10 +1,10 @@
-"""Tests for inputlock.classify (no hardware needed)."""
+"""Tests for trayock.classify (no hardware needed)."""
 
 import unittest
 
 from evdev import ecodes
 
-from inputlock.classify import classify
+from trayock.classify import classify
 
 
 class ClassifyTests(unittest.TestCase):

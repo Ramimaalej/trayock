@@ -15,9 +15,9 @@ from typing import Callable, Dict, List, Optional, Set, Tuple
 import evdev
 from evdev import ecodes
 
-from inputlock.classify import classify
+from trayock.classify import classify
 
-log = logging.getLogger("inputlock.blocker")
+log = logging.getLogger("trayock.blocker")
 
 DEFAULT_INPUT_DIR = "/dev/input"
 DEFAULT_SYSFS_DIR = "/sys/class/input"
@@ -310,7 +310,7 @@ class InputBlocker:
             self._detector.reset()
             self._locked = True
             self._thread = threading.Thread(
-                target=self._run, name="inputlock-reader", daemon=True
+                target=self._run, name="trayock-reader", daemon=True
             )
             self._thread.start()
         log.info(
@@ -433,7 +433,7 @@ class InputBlocker:
     def _watch_keyboards(self) -> List[str]:
         """Open keyboards read-only (no grab) and return the new paths.
 
-        Mouse-only mode must leave typing usable, but inputlock still has to
+        Mouse-only mode must leave typing usable, but trayock still has to
         see Ctrl+Alt+Shift+L to be able to release the mouse grab: several
         readers can share a device as long as nobody grabs it.
         """
@@ -525,12 +525,12 @@ class InputBlocker:
                 "Cannot lock the mouse: no keyboard could be read to watch the "
                 "escape combo (Ctrl+Alt+Shift+L), so there would be no way to "
                 "unlock.",
-                "Run 'inputlock --list-devices' to see the available devices.",
+                "Run 'trayock --list-devices' to see the available devices.",
             ]
         elif mode == MODE_POINTER:
             lines = [
                 "Cannot lock the mouse: no pointer device could be grabbed.",
-                "Run 'inputlock --list-devices' to see the available devices.",
+                "Run 'trayock --list-devices' to see the available devices.",
             ]
         else:
             lines = [

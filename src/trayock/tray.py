@@ -8,13 +8,13 @@ import sys
 from pathlib import Path
 from typing import Callable, Optional
 
-from inputlock.blocker import MODE_BOTH, MODE_LABELS, MODES
+from trayock.blocker import MODE_BOTH, MODE_LABELS, MODES
 
-log = logging.getLogger("inputlock.tray")
+log = logging.getLogger("trayock.tray")
 
 ICONS_DIR = Path(__file__).resolve().parent / "icons"
-ICON_UNLOCKED = "inputlock-unlocked"
-ICON_LOCKED = "inputlock-locked"
+ICON_UNLOCKED = "trayock-unlocked"
+ICON_LOCKED = "trayock-locked"
 HINT = "Esc: hold Ctrl+Alt+Shift+L 2 s"
 
 
@@ -137,13 +137,13 @@ class AppIndicatorTray(BaseTray):
         self._menu = menu
 
         ind = self._indicator.Indicator.new(
-            "inputlock",
+            "trayock",
             ICON_UNLOCKED,
             self._indicator.IndicatorCategory.APPLICATION_STATUS,
         )
         ind.set_icon_theme_path(str(ICONS_DIR))
         ind.set_menu(menu)
-        ind.set_title("inputlock: input unlocked")
+        ind.set_title("trayock: input unlocked")
         ind.set_status(self._indicator.IndicatorStatus.ACTIVE)
         ind.connect("activate", self._on_activate)
         self._ind = ind
@@ -177,11 +177,11 @@ class AppIndicatorTray(BaseTray):
             self._mode = mode
         if locked:
             self._ind.set_icon(ICON_LOCKED)
-            self._ind.set_title("inputlock: LOCKED - hold Ctrl+Alt+Shift+L to unlock")
+            self._ind.set_title("trayock: LOCKED - hold Ctrl+Alt+Shift+L to unlock")
             self._unlock_item.set_label("Unlock input")
         else:
             self._ind.set_icon(ICON_UNLOCKED)
-            self._ind.set_title("inputlock: input unlocked")
+            self._ind.set_title("trayock: input unlocked")
             self._unlock_item.set_label("Input unlocked")
         self._syncing = True
         try:
@@ -202,7 +202,7 @@ class AppIndicatorTray(BaseTray):
             self._Gtk.DialogFlags.MODAL,
             self._Gtk.MessageType.ERROR,
             self._Gtk.ButtonsType.CLOSE,
-            "inputlock: cannot lock input",
+            "trayock: cannot lock input",
         )
         dialog.format_secondary_text(message)
         dialog.run()
@@ -232,7 +232,7 @@ class PystrayTray(BaseTray):
             from PIL import Image  # noqa: F401  (pystray needs Pillow)
         except ImportError as exc:
             raise TrayUnavailable(
-                "pystray/Pillow not installed - pip install 'inputlock[pystray]'"
+                "pystray/Pillow not installed - pip install 'trayock[pystray]'"
             ) from exc
         except Exception as exc:  # e.g. pystray probing a missing backend
             raise TrayUnavailable(
@@ -267,7 +267,7 @@ class PystrayTray(BaseTray):
         )
         try:
             self._icon = pystray.Icon(
-                "inputlock", _padlock_image(False), "inputlock: input unlocked", menu
+                "trayock", _padlock_image(False), "trayock: input unlocked", menu
             )
         except Exception as exc:  # backend probing can happen lazily here
             raise TrayUnavailable(
@@ -282,16 +282,16 @@ class PystrayTray(BaseTray):
         try:
             self._icon.icon = _padlock_image(locked)
             self._icon.title = (
-                "inputlock: LOCKED - hold Ctrl+Alt+Shift+L to unlock"
+                "trayock: LOCKED - hold Ctrl+Alt+Shift+L to unlock"
                 if locked
-                else "inputlock: input unlocked"
+                else "trayock: input unlocked"
             )
         except Exception:
             log.exception("failed to update pystray icon")
 
     def show_error(self, message: str) -> None:
         log.error("%s", message)
-        print("inputlock: %s" % message, file=sys.stderr)
+        print("trayock: %s" % message, file=sys.stderr)
 
     def run(self) -> None:
         self._icon.run()

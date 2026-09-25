@@ -3,7 +3,7 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "inputlock"
+name = "trayock"
 version = "0.1.0"
 description = "GNOME top-bar tray toggle that locks/unlocks the keyboard and mouse via evdev."
 readme = "README.md"
@@ -31,13 +31,13 @@ pystray = ["pystray>=0.19", "Pillow>=9.0"]
 Homepage = "https://github.com/Ramimaalej/trayock"
 
 [project.scripts]
-inputlock = "inputlock.app:main"
+trayock = "trayock.app:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-inputlock = ["icons/*.svg", "data/*.desktop"]
+trayock = ["icons/*.svg", "data/*.desktop"]
 
 [tool.ruff]
 target-version = "py39"

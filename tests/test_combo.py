@@ -4,7 +4,7 @@ import unittest
 
 from evdev import ecodes
 
-from inputlock.blocker import EscapeComboDetector
+from trayock.blocker import EscapeComboDetector
 
 
 class FakeClock:

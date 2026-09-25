@@ -1,4 +1,4 @@
-"""Command-line entry point: ``inputlock``."""
+"""Command-line entry point: ``trayock``."""
 
 from __future__ import annotations
 
@@ -7,14 +7,14 @@ import logging
 import sys
 from typing import List, Optional
 
-from inputlock import __version__
+from trayock import __version__
 
-log = logging.getLogger("inputlock")
+log = logging.getLogger("trayock")
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="inputlock",
+        prog="trayock",
         description=(
             "Toggle keyboard/mouse input from a GNOME top-bar tray icon. "
             "While locked, all input is grabbed at the evdev level; "
@@ -22,7 +22,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
-        "--version", action="version", version="inputlock %s" % __version__
+        "--version", action="version", version="trayock %s" % __version__
     )
     parser.add_argument(
         "--escape-seconds",
@@ -64,12 +64,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--install-autostart",
         action="store_true",
-        help="start inputlock automatically at login, then exit",
+        help="start trayock automatically at login, then exit",
     )
     parser.add_argument(
         "--remove-autostart",
         action="store_true",
-        help="stop starting inputlock at login, then exit",
+        help="stop starting trayock at login, then exit",
     )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="enable debug logging"
@@ -78,7 +78,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _list_devices() -> int:
-    from inputlock.blocker import scan_devices
+    from trayock.blocker import scan_devices
 
     rows = scan_devices()
     if not rows:
@@ -108,7 +108,7 @@ def _list_devices() -> int:
         % (len(rows), keyboards, pointers)
     )
     if keyboards == 0:
-        print("No keyboard detected: inputlock cannot lock without one.")
+        print("No keyboard detected: trayock cannot lock without one.")
         return 1
     return 0
 
@@ -122,14 +122,14 @@ _DESKTOP_ACTIONS = (
 
 
 def _desktop_main(args: argparse.Namespace) -> int:
-    from inputlock import desktop
+    from trayock import desktop
 
     status = 0
     if args.install_desktop:
         try:
             print("launcher installed: %s" % desktop.install_desktop())
         except desktop.DesktopError as exc:
-            print("inputlock: %s" % exc, file=sys.stderr)
+            print("trayock: %s" % exc, file=sys.stderr)
             status = 1
     if args.remove_desktop:
         removed = desktop.remove_desktop()
@@ -138,7 +138,7 @@ def _desktop_main(args: argparse.Namespace) -> int:
         try:
             print("autostart enabled: %s" % desktop.install_autostart())
         except desktop.DesktopError as exc:
-            print("inputlock: %s" % exc, file=sys.stderr)
+            print("trayock: %s" % exc, file=sys.stderr)
             status = 1
     if args.remove_autostart:
         removed = desktop.remove_autostart()
@@ -161,14 +161,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.escape_seconds <= 0:
         parser.error("--escape-seconds must be > 0")
 
-    from inputlock.blocker import (
+    from trayock.blocker import (
         MODE_BOTH,
         MODE_KEYBOARD,
         MODE_POINTER,
         InputBlocker,
         LockError,
     )
-    from inputlock.tray import TrayUnavailable, create_tray
+    from trayock.tray import TrayUnavailable, create_tray
 
     hint = "Esc: hold Ctrl+Alt+Shift+L %g s" % args.escape_seconds
     if args.keyboard_only:
@@ -209,7 +209,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     except TrayUnavailable as exc:
         log.error("%s", exc)
         print(
-            "inputlock: no tray available.\n"
+            "trayock: no tray available.\n"
             "  Install your distro's AppIndicator library, then restart the app:\n"
             "    Fedora/RHEL/openSUSE:  sudo dnf install libayatana-appindicator-gtk3\n"
             "    Ubuntu/Debian:         sudo apt install gir1.2-ayatanaappindicator3-0.1\n"
@@ -218,7 +218,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             "    sudo dnf install gnome-shell-extension-appindicator\n"
             "    gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com\n"
             "  KDE/XFCE/MATE/LXQt have a tray built in - just install the library.\n"
-            "  Or install the pystray fallback: pip install 'inputlock[pystray]'",
+            "  Or install the pystray fallback: pip install 'trayock[pystray]'",
             file=sys.stderr,
         )
         return 1

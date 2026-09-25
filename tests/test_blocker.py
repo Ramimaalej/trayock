@@ -10,8 +10,8 @@ from unittest import mock
 
 from evdev import ecodes
 
-from inputlock import blocker
-from inputlock.blocker import (
+from trayock import blocker
+from trayock.blocker import (
     InputBlocker,
     LockError,
     iter_event_paths,
@@ -19,7 +19,7 @@ from inputlock.blocker import (
 )
 
 # the blocker logs loudly on purpose; keep the test run readable
-logging.getLogger("inputlock").setLevel(logging.CRITICAL)
+logging.getLogger("trayock").setLevel(logging.CRITICAL)
 
 KEYBOARD_CAPS = {ecodes.EV_KEY: {ecodes.KEY_A, ecodes.KEY_B, ecodes.KEY_SPACE}}
 POINTER_CAPS = {ecodes.EV_REL: {ecodes.REL_X, ecodes.REL_Y}}

@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=InputLock
+Name=Trayock
 GenericName=Keyboard and mouse locker
 Comment=Lock or unlock the keyboard and mouse from the top bar
-Exec=inputlock
-Icon=inputlock
+Exec=trayock
+Icon=trayock
 Terminal=false
 Categories=Utility;Settings;System;
 Keywords=lock;keyboard;mouse;privacy;kiosk;input;

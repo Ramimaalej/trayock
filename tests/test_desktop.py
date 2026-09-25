@@ -10,8 +10,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from inputlock import desktop
-from inputlock.app import main
+from trayock import desktop
+from trayock.app import main
 
 
 class XdgTestCase(unittest.TestCase):
@@ -32,21 +32,21 @@ class XdgTestCase(unittest.TestCase):
 
     @property
     def launcher(self) -> Path:
-        return desktop.applications_dir() / "inputlock.desktop"
+        return desktop.applications_dir() / "trayock.desktop"
 
     @property
     def autostart(self) -> Path:
-        return desktop.autostart_dir() / "inputlock.desktop"
+        return desktop.autostart_dir() / "trayock.desktop"
 
 
 class InstallTests(XdgTestCase):
     def test_install_desktop_writes_launcher_and_icon(self):
-        path = desktop.install_desktop("/opt/bin/inputlock")
+        path = desktop.install_desktop("/opt/bin/trayock")
 
         self.assertEqual(path, self.launcher)
         content = self.launcher.read_text()
-        self.assertIn("Exec=/opt/bin/inputlock", content)
-        self.assertIn("Icon=inputlock", content)
+        self.assertIn("Exec=/opt/bin/trayock", content)
+        self.assertIn("Icon=trayock", content)
         self.assertIn("Type=Application", content)
         self.assertIn("NoDisplay=false", content)
         self.assertTrue(desktop.installed_icon().is_file())
@@ -60,11 +60,11 @@ class InstallTests(XdgTestCase):
         self.assertFalse(desktop.remove_desktop())
 
     def test_autostart_is_hidden_from_app_grids(self):
-        path = desktop.install_autostart("/opt/bin/inputlock")
+        path = desktop.install_autostart("/opt/bin/trayock")
 
         self.assertEqual(path, self.autostart)
         content = self.autostart.read_text()
-        self.assertIn("Exec=/opt/bin/inputlock", content)
+        self.assertIn("Exec=/opt/bin/trayock", content)
         self.assertIn("NoDisplay=true", content)
         self.assertIn("X-GNOME-Autostart-enabled=true", content)
 
@@ -77,19 +77,19 @@ class InstallTests(XdgTestCase):
     def test_render_desktop_requires_the_template(self):
         with mock.patch.object(desktop, "DESKTOP_TEMPLATE", Path("/nope/nope.desktop")):
             with self.assertRaises(desktop.DesktopError):
-                desktop.render_desktop("inputlock")
+                desktop.render_desktop("trayock")
 
 
 class ResolveCommandTests(unittest.TestCase):
     def test_prefers_the_installed_script(self):
         self.assertEqual(
-            desktop.resolve_command(which=lambda _name: "/usr/bin/inputlock"),
-            "/usr/bin/inputlock",
+            desktop.resolve_command(which=lambda _name: "/usr/bin/trayock"),
+            "/usr/bin/trayock",
         )
 
     def test_falls_back_to_argv0_when_executable(self):
         with tempfile.TemporaryDirectory() as tmp:
-            script = Path(tmp, "inputlock")
+            script = Path(tmp, "trayock")
             script.write_text("#!/bin/sh\n")
             script.chmod(script.stat().st_mode | stat.S_IXUSR)
             found = desktop.resolve_command(
@@ -97,13 +97,13 @@ class ResolveCommandTests(unittest.TestCase):
             )
         self.assertEqual(found, str(script.resolve()))
 
-    def test_falls_back_to_python_m_inputlock(self):
+    def test_falls_back_to_python_m_trayock(self):
         found = desktop.resolve_command(
             "/definitely/not/a/real/binary",
             which=lambda _name: None,
             python="/usr/bin/python3",
         )
-        self.assertEqual(found, "/usr/bin/python3 -m inputlock")
+        self.assertEqual(found, "/usr/bin/python3 -m trayock")
 
 
 class CliTests(XdgTestCase):

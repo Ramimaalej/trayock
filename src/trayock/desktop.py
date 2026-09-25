@@ -12,12 +12,12 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-APP_ID = "inputlock"
-DESKTOP_FILENAME = "inputlock.desktop"
+APP_ID = "trayock"
+DESKTOP_FILENAME = "trayock.desktop"
 
 _PACKAGE_DIR = Path(__file__).resolve().parent
 DESKTOP_TEMPLATE = _PACKAGE_DIR / "data" / DESKTOP_FILENAME
-ICON_SOURCE = _PACKAGE_DIR / "icons" / "inputlock-unlocked.svg"
+ICON_SOURCE = _PACKAGE_DIR / "icons" / "trayock-unlocked.svg"
 
 
 class DesktopError(RuntimeError):
@@ -46,7 +46,7 @@ def resolve_command(
     which=shutil.which,
     python: Optional[str] = None,
 ) -> str:
-    """Best ``Exec=`` value: the installed script, else ``python -m inputlock``."""
+    """Best ``Exec=`` value: the installed script, else ``python -m trayock``."""
     found = which(APP_ID)
     if found:
         return found
@@ -114,7 +114,7 @@ def remove_desktop() -> bool:
 
 
 def install_autostart(exec_line: Optional[str] = None) -> Path:
-    """Write ``~/.config/autostart/inputlock.desktop`` so inputlock starts at login."""
+    """Write ``~/.config/autostart/trayock.desktop`` so trayock starts at login."""
     command = exec_line or resolve_command()
     content = render_desktop(command, no_display=True)
     return _write(autostart_dir() / DESKTOP_FILENAME, content)

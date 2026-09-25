@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 USER_NAME="${SUDO_USER:-${USER:-$(id -un)}}"
-BIN="$HOME/.local/bin/inputlock"
+BIN="$HOME/.local/bin/trayock"
 
 note()  { printf '\n==> %s\n' "$*"; }
 warn()  { printf '    ! %s\n' "$*" >&2; }
@@ -42,7 +42,7 @@ else
     warn "AppIndicator library (AyatanaAppIndicator3 / AppIndicator3) manually"
 fi
 
-note "2/6 inputlock (pip, user install)"
+note "2/6 trayock (pip, user install)"
 python3 -m pip install --user --no-deps .
 
 note "3/6 'input' group"
@@ -64,20 +64,20 @@ if command -v gnome-extensions >/dev/null 2>&1; then
         || warn "enable it after a shell restart: gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com"
 fi
 
-note "6/6 (re)start inputlock"
-run_root_pkill() { pkill -f "\.local/bin/inputlock" 2>/dev/null || true; }
+note "6/6 (re)start trayock"
+run_root_pkill() { pkill -f "\.local/bin/trayock" 2>/dev/null || true; }
 run_root_pkill
 sleep 1
 if id -nG | grep -qw input; then
-    setsid nohup "$BIN" >/tmp/inputlock.log 2>&1 </dev/null &
+    setsid nohup "$BIN" >/tmp/trayock.log 2>&1 </dev/null &
 else
-    sg input -c "setsid nohup '$BIN' >/tmp/inputlock.log 2>&1 </dev/null &"
+    sg input -c "setsid nohup '$BIN' >/tmp/trayock.log 2>&1 </dev/null &"
 fi
 sleep 2
-if pgrep -f "\.local/bin/inputlock" >/dev/null 2>&1; then
-    echo "    running (pid $(pgrep -f '\.local/bin/inputlock' | head -1))"
+if pgrep -f "\.local/bin/trayock" >/dev/null 2>&1; then
+    echo "    running (pid $(pgrep -f '\.local/bin/trayock' | head -1))"
 else
-    warn "could not start it yet - check /tmp/inputlock.log"
+    warn "could not start it yet - check /tmp/trayock.log"
 fi
 
 note "done. devices:"
