@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "inputlock"
+version = "0.1.0"
+description = "GNOME top-bar tray toggle that locks/unlocks the keyboard and mouse via evdev."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "Ramimaalej" }]
+keywords = ["input", "lock", "evdev", "tray", "appindicator", "gnome", "linux"]
+classifiers = [
+    "Environment :: X11 Applications :: GTK",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Desktop Environment :: Gnome",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "evdev>=1.6",
+    "PyGObject>=3.42",
+]
+
+[project.optional-dependencies]
+pystray = ["pystray>=0.19", "Pillow>=9.0"]
+
+[project.urls]
+Homepage = "https://github.com/Ramimaalej/trayock"
+
+[project.scripts]
+inputlock = "inputlock.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+inputlock = ["icons/*.svg", "data/*.desktop"]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]

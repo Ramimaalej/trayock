@@ -1,0 +1,3 @@
+# Allow members of group "input" to open the evdev nodes so inputlock can
+# take an exclusive grab without running as root.
+KERNEL=="event*", SUBSYSTEM=="input", GROUP="input", MODE="0660"

@@ -1,0 +1,4 @@
+include Makefile
+include LICENSE
+recursive-include packaging *
+global-exclude __pycache__ *.py[cod]

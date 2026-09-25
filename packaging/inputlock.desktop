@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=InputLock
+GenericName=Keyboard and mouse locker
+Comment=Lock or unlock the keyboard and mouse from the top bar
+Exec=inputlock
+Icon=inputlock
+Terminal=false
+Categories=Utility;Settings;System;
+Keywords=lock;keyboard;mouse;privacy;kiosk;input;
+StartupNotify=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
